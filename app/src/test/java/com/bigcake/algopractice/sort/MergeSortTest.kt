@@ -12,7 +12,15 @@ internal class MergeSortTest {
     @ParameterizedTest
     @MethodSource("sortDataProvider")
     fun iterativeSortTest(input: IntArray, expected: IntArray) {
-        Assertions.assertTrue(MergeSort.sort(input).contentEquals(expected))
+        Assertions.assertTrue(MergeSort.bottomUp(input).contentEquals(expected))
+    }
+
+    @DisplayName("Should sort list return correct results")
+    @ParameterizedTest
+    @MethodSource("sortDataProvider")
+    fun recursionSortTest(input: IntArray, expected: IntArray) {
+        MergeSort.topDown(input)
+        Assertions.assertTrue(input.contentEquals(expected))
     }
 
     companion object {

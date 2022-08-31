@@ -3,7 +3,7 @@ package com.bigcake.algopractice.sort
 import kotlin.math.min
 
 object MergeSort {
-    fun sort(input: IntArray): IntArray {
+    fun bottomUp(input: IntArray): IntArray {
         val size = input.size
         if (size == 1) {
             return input
@@ -13,27 +13,39 @@ object MergeSort {
             var start = 0
             while (start < size) {
                 val mid = min(start + currentSize, size)
-                val high = min(start + currentSize + currentSize, size)
-                val (start1, end1) = Pair(start, mid)
-                val (start2, end2) = Pair(mid, high)
-                var i = 0
-                var j = 0
-                var k = start1
-                val left = input.copyOfRange(start1, end1)
-                val right = input.copyOfRange(start2, end2)
-                while (i < left.size && j < right.size) {
-                    input[k++] = if (left[i] < right[j]) left[i++] else right[j++]
-                }
-                while (i < left.size) {
-                    input[k++] = left[i++]
-                }
-                while (j < right.size) {
-                    input[k++] = right[j++]
-                }
+                val end = min(start + currentSize + currentSize, size)
+                val left = input.copyOfRange(start, mid)
+                val right = input.copyOfRange(mid, end)
+                merge(input, start, left, right)
                 start += (2 * currentSize)
             }
             currentSize += currentSize
         }
         return input
+    }
+
+    fun topDown(input: IntArray) {
+        val n = input.size
+        if (n == 1) {
+            return
+        }
+        val mid = n / 2
+        val (left, right) = Pair(input.copyOfRange(0, mid), input.copyOfRange(mid, n))
+        topDown(left)
+        topDown(right)
+        merge(input, 0, left, right)
+    }
+
+    private fun merge(destination: IntArray, start: Int, left: IntArray, right: IntArray) {
+        var (i, j, k) = intArrayOf(0, 0, start)
+        while (i < left.size && j < right.size) {
+            destination[k++] = if (left[i] < right[j]) left[i++] else right[j++]
+        }
+        while (i < left.size) {
+            destination[k++] = left[i++]
+        }
+        while (j < right.size) {
+            destination[k++] = right[j++]
+        }
     }
 }
